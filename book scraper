@@ -1,0 +1,54 @@
+# Let me explain what I am trying to do:
+
+# write a code to scrap name, price and availability like "on sale" OR "sold" from "https://bestofusedbooks.com/" website
+
+# Imported the dependencies:
+from bs4 import BeautifulSoup as bs
+import requests
+
+
+# write the name of book that you want to scrap
+book_name = input("search:")
+book_name = book_name.title()
+bestofusedbooks_url = "https://bestofusedbooks.com/search?q=" + book_name
+print(bestofusedbooks_url)
+
+'''
+now this url will show us lots of result , for if I enter book_name = who moved my cheese? ,
+it will show that there 2 page available for this search
+'''
+
+
+try:
+    source = requests.get(bestofusedbooks_url)
+    source.raise_for_status()
+    soup = bs(source.text,'html.parser')
+    Unclean = soup.find('main',class_="main-content js-focus-hidden")
+    clean = Unclean.find('ul',class_="list--inline pagination")
+    page_string = clean.find('li',class_="pagination__text").text
+    page_string = page_string.split()
+    a= int(page_string[1])
+    b= int(page_string[3])
+    print(type(a))
+    print(b)
+
+except Exception as e:
+    print(e)
+"""
+what I am trying to do in above code is that it will search how many pages is there, it will be available 
+in this format "Page 1 of 2" , so i have a write code[(page_string = clean.find('li',class_="pagination__text").text] 
+as it will be in string format and the aliments will be the same by aliments I mean this "Page 1 of 2" and then I can
+fetch it using indexing , so I can get run a loop from x page to y page and fetch the data (name,price and availability)
+"""
+
+"""
+Earlier the code was running but not for a particular record ,if I change the book_name , then it's code is not 
+working , as of now if not running
+"""
+
+'''
+By doing so I can get the all the records and then store it in a csv or xlsx and from that I can check the name of the
+book and then print the price and availability.
+'''
+
+# the above code is only to get the number of pages 
